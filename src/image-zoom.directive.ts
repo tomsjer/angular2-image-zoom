@@ -1,4 +1,5 @@
 import {Directive, Input, HostListener, ComponentFactoryResolver, ComponentRef, ViewContainerRef, OnInit, OnDestroy, OnChanges, SimpleChanges, ElementRef, ViewChild} from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import {ImageZoomContainer} from './image-zoom-container.component';
 import {ImageZoomLens} from './image-zoom-lens.component';
 
@@ -10,6 +11,7 @@ export class ImageZoom implements OnInit, OnDestroy, OnChanges {
     @Input() allowZoom: boolean = true;
     @Input() clickToZoom: boolean = false;
     @Input() scrollZoom: boolean = true;
+    @Input() base64: boolean = false;
     @Input() windowPosition: number = 1;
     @Input() lensStyle: string = 'WINDOW';
     @Input() lensWidth: number = 300;
@@ -63,7 +65,7 @@ export class ImageZoom implements OnInit, OnDestroy, OnChanges {
     private _imageZoomContainerRef: ComponentRef<ImageZoomContainer>;
     private _imageZoomLensRef: ComponentRef<ImageZoomLens>;
 
-    constructor(private _elementRef: ElementRef, private _componentFactoryResolver: ComponentFactoryResolver, private _viewContainerRef: ViewContainerRef) {
+    constructor(private _elementRef: ElementRef, private _componentFactoryResolver: ComponentFactoryResolver, private _viewContainerRef: ViewContainerRef, private sanitizer: DomSanitizer) {
         if(this._elementRef.nativeElement.nodeName !== 'IMG') {
             console.error('ImageZoom not placed on image element', this._elementRef.nativeElement);
             return;
@@ -122,7 +124,13 @@ export class ImageZoom implements OnInit, OnDestroy, OnChanges {
             }
             this.changeZoomLevel();
         };
-        this._zoomedImage.src = this.imageZoom ? this.imageZoom : this.img.src;
+        if (this.base64) {
+
+            this._zoomedImage.src = this.sanitizer.bypassSecurityTrustResourceUrl( this.imageZoom ? this.imageZoom : this.img.src);
+        } else {
+
+            this._zoomedImage.src = this.imageZoom ? this.imageZoom : this.img.src;
+        }
     }
 
     private setImageZoomContainer() {

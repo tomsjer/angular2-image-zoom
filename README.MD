@@ -46,6 +46,7 @@ zoomLevel | number | auto-calculated | Initial zoom level (smaller number indica
 minZoomLevel | number | .2 | TODO
 maxZoomLevel | number | auto-calculated | TODO
 zoomLevelIncrement | number | .1 | Size of each change in zoom level while scrolling
+base64 | boolean | false | User DomSanitizer.bypassSecurityTrustResourceUrl when true
 
 
 
