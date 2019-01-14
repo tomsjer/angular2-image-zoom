@@ -126,7 +126,7 @@ export class ImageZoom implements OnInit, OnDestroy, OnChanges {
         };
         if (this.base64) {
 
-            this._zoomedImage.src = this.sanitizer.bypassSecurityTrustResourceUrl( this.imageZoom ? this.imageZoom : this.img.src);
+            this._zoomedImage.src = <string>this.sanitizer.bypassSecurityTrustResourceUrl( this.imageZoom ? this.imageZoom : this.img.src);
         } else {
 
             this._zoomedImage.src = this.imageZoom ? this.imageZoom : this.img.src;
